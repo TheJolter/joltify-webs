@@ -11,7 +11,10 @@ export const verifyTx = (tx: (typeof TX) ): {
   const code = tx.tx_response?.code // 0 is success
   if (code !== 0) return {code: 1, message: `tx code ${code}`}
 
-  const msgs = tx.tx?.body?.messages
+  let msgs = tx.tx?.body?.messages
+  if (!msgs) {
+    msgs = (tx as any).data?.tx?.body?.messages // https://www.mintscan.io/noble/tx/191D28BCE0254B23082E6E9F8A39AAB16162BC67F1BE122C134547E5C385C805
+  }
   if (!msgs) return {code: 2, message: `no msgs found`}
 
   const msgDepositForBurn = msgs.find(msg=>msg["@type"] === '/circle.cctp.v1.MsgDepositForBurn')
