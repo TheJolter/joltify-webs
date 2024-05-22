@@ -3,7 +3,7 @@ export const params = {
   targetChains: [
     {
       chainName: 'Ethereum',
-      fee: '10000000', // uusdc in noble
+      fee: '20000000', // gas fee eg: https://etherscan.io/tx/0x499731e953c645b7fd77092943de16202a781ca38dd3031b854f586b8f789625
       time: "13 minutes",
       domain: 0 // https://developers.circle.com/stablecoins/docs/supported-domains
     },
