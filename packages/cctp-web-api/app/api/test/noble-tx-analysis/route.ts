@@ -1,10 +1,10 @@
 import { NextResponse } from "next/server";
-import { tx } from "./tx";
+import { txExample } from "./tx";
 import { verifyTx } from "../../mint-on-evm/verify-tx";
 
 export async function GET() {
 
-  const verifyResult = verifyTx(tx)
+  const verifyResult = verifyTx(txExample)
 
   
   
