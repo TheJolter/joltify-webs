@@ -28,8 +28,9 @@ export async function POST(req:NextRequest) {
   // verify tx
   const verify = verifyTx(tx)
   if (verify.code!==0) return NextResponse.json({ verify }, { status: 400 });
-  const domain = verify.destination_domain
-  if (!domain) return NextResponse.rewrite('destination_domain not found', { status: 403 });
+  console.log('verifyTx result', verify)
+  const domain = verify.destination_domain // 0 is success
+  if (domain===undefined) return NextResponse.rewrite('destination_domain not found', { status: 403 });
 
   try {
     const res = await submitEvmMint({domain, message: messages[0]})
