@@ -1,4 +1,4 @@
-export const maxDuration = 25
+export const maxDuration = 60
 
 import { NextRequest, NextResponse } from "next/server";
 import { txExample } from "../test/noble-tx-analysis/tx";
