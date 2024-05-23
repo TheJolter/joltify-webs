@@ -1,4 +1,4 @@
-export const maxDuration = 25
+export const maxDuration = 120
 
 import { NextRequest, NextResponse } from "next/server";
 import { sleep } from 'utils';
