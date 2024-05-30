@@ -3,10 +3,12 @@
 import React from "react";
 import CosmosWalletStore from "./CosmosWalletStore";
 import EvmWalletStore from "./EvmWalletStore";
+import InputStore from "./InputStore";
 
 export const stores = Object.freeze({
   cosmosWalletStore: new CosmosWalletStore(),
-  evmWalletStore: new EvmWalletStore()
+  evmWalletStore: new EvmWalletStore(),
+  inputStore: new InputStore(),
 })
 
 export const storesContext = React.createContext(stores);
