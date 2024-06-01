@@ -1,3 +1,7 @@
+
+
+* use chainid and address to store usdc balance
+
 * If joltify/noble -> evm, fee is gas + routeFee
 
 # run cctp-web-api

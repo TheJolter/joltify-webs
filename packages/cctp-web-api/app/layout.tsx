@@ -51,10 +51,10 @@ export default function RootLayout({
               <Link
                 isExternal
                 className="flex items-center gap-1 text-current"
-                href="https://app.joltify.io"
+                href="https://pathr.io"
               >
                 <span className="text-default-600">Powered by</span>
-                <p className="text-primary">Joltify</p>
+                <p className="text-primary">Pathr</p>
               </Link>
             </footer>
           </div>

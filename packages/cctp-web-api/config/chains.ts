@@ -1,4 +1,4 @@
-export type Chain = {
+export type EvmChain = {
   chainID: string;
   chainName: string;
   rpc: string;
@@ -7,7 +7,10 @@ export type Chain = {
   logo?: string;
   chainType: 'evm',
   tokenType: 'erc20',
-} | {
+  tokenMessenger: string
+}
+
+export type CosmosChain = {
   chainID: string;
   chainName: string;
   rpc: string;
@@ -20,6 +23,8 @@ export type Chain = {
   prefix: string;
 }
 
+export type Chain = EvmChain | CosmosChain;
+
 export const chains:Chain[] = [
   {
     chainID: '0x1',
@@ -29,6 +34,7 @@ export const chains:Chain[] = [
     usdcAddress: '0xa0b86991c6218b36c1d19d4a2e9eb0ce3606eb48',
     chainType: 'evm',
     tokenType: 'erc20',
+    tokenMessenger: '0xbd3fa81b58ba92a82136038b25adec7066af3155', // https://developers.circle.com/stablecoins/docs/evm-smart-contracts#tokenmessenger-mainnet
   },
   {
     chainID: '0xa86a',
@@ -38,6 +44,7 @@ export const chains:Chain[] = [
     usdcAddress: '0xB97EF9Ef8734C71904D8002F8b6Bc66Dd9c48a6E',
     chainType: 'evm',
     tokenType: 'erc20',
+    tokenMessenger: '0x6b25532e1060ce10cc3b0a99e5683b91bfde6982',
   },
   {
     chainID: '0xa61',
@@ -47,6 +54,7 @@ export const chains:Chain[] = [
     usdcAddress: '0xaf88d065e77c8cC2239327C5EDb3A432268e5831',
     chainType: 'evm',
     tokenType: 'erc20',
+    tokenMessenger: '0x19330d10D9Cc8751218eaf51E8885D058642E08A',
   },
   {
     chainID: 'joltify_1729-1',
@@ -63,7 +71,7 @@ export const chains:Chain[] = [
     chainID: 'noble-1',
     chainName: 'Noble',
     rpc: 'https://rpc.noble.strange.love',
-    lcd: 'https://lcd.noble.strange.love/swagger',
+    lcd: 'https://lcd.noble.strange.love',
     domain: 4,
     usdcAddress: 'uusdc',
     chainType: 'cosmos',

@@ -18,15 +18,19 @@ import { ethers } from "ethers";
 import { nobleFee } from "@/config";
 import { params } from "./api/params/config";
 import cosmosAddrConvertor from "@/utils/cosmosAddrConvertor";
+import getUsdcBalance from "@/utils/get-usdc-balance";
+import bigNumberFloor from "utils/src/bn";
 
 export default observer(function Home() {
   const inputStore = useStore('inputStore')
   const cosmosWalletStore = useStore('cosmosWalletStore')
   const evmWalletStore = useStore('evmWalletStore')
+  const balanceStore = useStore('balanceStore')
   const [errMsgDestAddr, setErrMsgDestAddr] = useState<string>()
   const [errMsgAmount, setErrMsgAmount] = useState<string>()
   const [sourceChain, setSourceChain] = useState<Chain>()
   const [targetChain, setTargetChain] = useState<Chain>()
+  const [sourceAddress, setSourceAddress] = useState<string>()
 
   useEffect(() => {
     const sourceChain = chains.find((chain) => chain.chainID === inputStore.sourceChainID)
@@ -74,7 +78,41 @@ export default observer(function Home() {
     if (bn(amount).lte(minAmount)) {
       setErrMsgAmount(`Amount must be greater than ${minAmount}`)
     }
-  }, [inputStore.amount, targetChain?.chainID])
+    if (sourceAddress) {
+      const usdcBalance = balanceStore.getUsdcBalance(sourceChain?.chainID, sourceAddress)
+      if (bn(amount).gt(usdcBalance)) {
+        setErrMsgAmount(`Amount must be less than balance`)
+      }
+    }
+  }, [
+    inputStore.amount, targetChain?.chainID, sourceAddress, sourceChain?.chainID,
+    JSON.stringify(balanceStore.usdcBalance) // need to trigger re-render when balance updated and can not use balanceStore.usdcBalance as dependency
+  ])
+
+  useEffect(() => {
+    let address: string|undefined
+    if (sourceChain?.chainType==='evm' && evmWalletStore.address) {
+      address = evmWalletStore.address
+    } else if (sourceChain?.chainType==='cosmos' && cosmosWalletStore.address) {
+      address = cosmosAddrConvertor(cosmosWalletStore.address, sourceChain.prefix!)
+    }
+    setSourceAddress(address)
+    if (!address) return
+    renewBalance(address)
+  }, [sourceChain?.chainID, cosmosWalletStore.address, evmWalletStore.address])
+
+  const renewBalance = (address: string) => {
+    if (!address) return
+    getUsdcBalance({chainID: sourceChain?.chainID||'', address}).then(balance=>{
+      balanceStore.addUsdcBalance({
+        chainID: sourceChain?.chainID||'', 
+        address, 
+        balance
+      })
+    }).catch(error=>{
+      console.error('getUsdcBalance error', error)
+    })
+  }
 
   const handleTargetAddressChange = (e: ChangeEvent<HTMLInputElement>) => {
     inputStore.setTargetAddress(e.target.value)
@@ -144,12 +182,19 @@ export default observer(function Home() {
           autoComplete="off"
         />
 
-        <Input label="Amount" className="my-8" value={inputStore.amount}
+        <Input 
+          label={`Amount`}
+          className="mt-8" value={inputStore.amount}
           onChange={handleAmountChange}
           isInvalid={!!errMsgAmount}
           errorMessage={errMsgAmount}
           autoComplete="off"
         />
+        <div className="mb-8 text-xs text-gray-400">
+          {sourceAddress&&<>
+            Balance: {balanceStore.getUsdcBalance(sourceChain?.chainID, sourceAddress)} USDC
+          </>}
+        </div>
 
         { sourceChain?.chainType === 'evm' && inputStore.targetChainID === 'joltify_1729-1' &&
           <EvmToJolyify />
