@@ -6,6 +6,7 @@ import { Button } from "@nextui-org/react";
 import { observer } from 'mobx-react-lite'
 import {Dropdown, DropdownTrigger, DropdownMenu, DropdownItem} from "@nextui-org/react";
 import cosmosAddrConvertor from "@/utils/cosmosAddrConvertor";
+import { useEffect } from "react";
 
 export default observer(function CosmosWalletButton() {
   const cosmosWalletStore = useStore('cosmosWalletStore')
@@ -22,6 +23,21 @@ export default observer(function CosmosWalletButton() {
 
   const handleLogout = () => {
     cosmosWalletStore.logout()
+  }
+
+  useEffect(()=>{
+    const keplr = (window as any).keplr
+    if (!keplr) return
+    window.addEventListener('keplr_keystorechange', handleKeplrKeystoreChange)
+    return () => {
+      window.removeEventListener('keplr_keystorechange', handleKeplrKeystoreChange)
+    }
+  }, [])
+
+  const handleKeplrKeystoreChange = () => {
+    if (!cosmosWalletStore.address) return
+    handleLogout()
+    handleConnect()
   }
 
   if (cosmosWalletStore.address) {
