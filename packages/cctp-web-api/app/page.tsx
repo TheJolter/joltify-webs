@@ -52,7 +52,7 @@ export default observer(function Home() {
       const address = cosmosAddrConvertor(cosmosWalletStore.address, targetChain.prefix!)
       inputStore.setTargetAddress(address)
     }
-  }, [inputStore.targetChainID])
+  }, [inputStore.targetChainID, evmWalletStore.address, cosmosWalletStore.address])
 
   useEffect(() => {
     setErrMsgDestAddr(undefined)
