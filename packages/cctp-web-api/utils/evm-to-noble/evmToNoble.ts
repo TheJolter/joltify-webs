@@ -17,10 +17,24 @@ export default function evmToNoble({
       chain.chainID === sourceChainID
     )) as EvmChain
     const ethereum = (window as any).ethereum as any
-    if (ethereum.chainId !== sourceChainID ) {
-      reject(new Error(`Please switch chain to ${sourceChain?.chainName} on MetaMask wallet`))
+
+    if (!ethereum) {
+      reject(new Error(`No ethereum wallet found`))
       return
     }
+
+    if (ethereum.chainId !== sourceChainID ) {
+      try {
+        await ethereum.request({
+          method: 'wallet_switchEthereumChain',
+          params: [{ chainId: sourceChainID }]
+        })
+      } catch (error) {
+        reject(error)
+        return
+      }
+    }
+
     const provider = new ethers.BrowserProvider(ethereum)
     let signer:ethers.JsonRpcSigner
     try {
