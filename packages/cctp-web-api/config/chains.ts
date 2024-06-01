@@ -47,7 +47,7 @@ export const chains:Chain[] = [
     tokenMessenger: '0x6b25532e1060ce10cc3b0a99e5683b91bfde6982',
   },
   {
-    chainID: '0xa61',
+    chainID: '0xa4b1',
     chainName: 'Arbitrum',
     rpc: 'https://arb1.arbitrum.io/rpc',
     domain: 3,
