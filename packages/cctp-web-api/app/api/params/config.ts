@@ -1,5 +1,5 @@
 export const params = {
-  minter: process.env.MINTER_NOBLE, // to receive minting fee
+  minter: process.env.NEXT_PUBLIC_MINTER_NOBLE, // to receive minting fee
   targetChains: [
     {
       chainName: 'Ethereum',
@@ -9,7 +9,7 @@ export const params = {
     },
     {
       chainName: 'Avalanche',
-      fee: '0',
+      fee: '1000000',
       time: "20 seconds",
       domain: 1, 
     },
