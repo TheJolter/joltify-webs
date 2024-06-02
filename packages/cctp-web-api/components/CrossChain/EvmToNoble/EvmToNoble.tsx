@@ -24,9 +24,6 @@ export default observer(function EvmToNoble() {
       amount: inputStore.amount,
       targetAddress: inputStore.targetAddress
     }).then(() => {
-      getUsdcBalance({chainID: sourceChain?.chainID ?? '', address: evmWalletStore.address!}).then(balance => {
-        balanceStore.addUsdcBalance({chainID: sourceChain?.chainID ?? '', balance, address: evmWalletStore.address!})
-      })
       watchCosmosUsdcChange({chainID: inputStore.targetChainID, address: inputStore.targetAddress, timeoutSecond: 99999}).then(() => {
         modalStore.showModal({
           title: '✅ Success',
@@ -44,6 +41,9 @@ export default observer(function EvmToNoble() {
         })
       }).finally(()=>{
         setSending(false)
+        getUsdcBalance({chainID: sourceChain?.chainID ?? '', address: evmWalletStore.address!}).then(balance => {
+          balanceStore.addUsdcBalance({chainID: sourceChain?.chainID ?? '', balance, address: evmWalletStore.address!})
+        })
       })
     }).catch((e) => {
       setSending(false)
