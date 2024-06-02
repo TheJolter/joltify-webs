@@ -7,7 +7,8 @@ export type EvmChain = {
   logo?: string;
   chainType: 'evm',
   tokenType: 'erc20',
-  tokenMessenger: string
+  tokenMessenger: string,
+  explorer: string,
 }
 
 export type CosmosChain = {
@@ -20,7 +21,8 @@ export type CosmosChain = {
   logo?: string;
   chainType: 'cosmos',
   tokenType: 'native' | 'ibc',
-  prefix: string;
+  prefix: string,
+  explorer: string,
 }
 
 export type Chain = EvmChain | CosmosChain;
@@ -35,6 +37,7 @@ export const chains:Chain[] = [
     chainType: 'evm',
     tokenType: 'erc20',
     tokenMessenger: '0xbd3fa81b58ba92a82136038b25adec7066af3155', // https://developers.circle.com/stablecoins/docs/evm-smart-contracts#tokenmessenger-mainnet
+    explorer: 'https://etherscan.io',
   },
   {
     chainID: '0xa86a',
@@ -45,6 +48,7 @@ export const chains:Chain[] = [
     chainType: 'evm',
     tokenType: 'erc20',
     tokenMessenger: '0x6b25532e1060ce10cc3b0a99e5683b91bfde6982',
+    explorer: 'https://snowtrace.io',
   },
   {
     chainID: '0xa4b1',
@@ -55,17 +59,19 @@ export const chains:Chain[] = [
     chainType: 'evm',
     tokenType: 'erc20',
     tokenMessenger: '0x19330d10D9Cc8751218eaf51E8885D058642E08A',
+    explorer: 'https://arbiscan.io',
   },
   {
     chainID: 'joltify_1729-1',
     chainName: 'Joltify',
     rpc: 'https://rpc.joltify.io',
     lcd: 'https://lcd.joltify.io',
-    domain: -1, //
+    domain: -1, // means ibc
     usdcAddress: 'ibc/65D0BEC6DAD96C7F5043D1E54E54B6BB5D5B3AEC3FF6CEBB75B9E059F3580EA3',
     chainType: 'cosmos',
     tokenType: 'ibc',
     prefix: 'jolt',
+    explorer: 'https://explorer.joltify.io/joltify',
   },
   {
     chainID: 'noble-1',
@@ -77,5 +83,6 @@ export const chains:Chain[] = [
     chainType: 'cosmos',
     tokenType: 'native',
     prefix: 'noble',
+    explorer: 'https://www.mintscan.io/noble', // /accounts/address, /transactions/txhash
   },
 ]
