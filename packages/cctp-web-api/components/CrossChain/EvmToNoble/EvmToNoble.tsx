@@ -18,6 +18,7 @@ export default observer(function EvmToNoble() {
   const sourceChain = chains.find(c => c.chainID === inputStore.sourceChainID)
 
   const handleEvmToNoble = () => {
+    if (!evmWalletStore.address || Number(inputStore.amount)<=0 || !inputStore.targetAddress) return
     setSending(true)
     evmToNoble({
       sourceChainID: inputStore.sourceChainID,
