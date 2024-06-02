@@ -35,6 +35,7 @@ export default observer(function EvmToJolyify() {
   }, [inputStore.targetAddress, targetChain?.chainType])
 
   const handleSendToNoble = () => {
+    if (!evmWalletStore.address || Number(inputStore.amount)<=0 || !inputStore.targetAddress) return
     setSendingToNoble(true)
     evmToNoble({
       sourceChainID: inputStore.sourceChainID,
