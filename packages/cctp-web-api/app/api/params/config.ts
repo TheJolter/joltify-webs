@@ -9,7 +9,7 @@ export const params = {
     },
     {
       chainName: 'Avalanche',
-      fee: '1000000',
+      fee: '0',
       time: "20 seconds",
       domain: 1, 
     },
