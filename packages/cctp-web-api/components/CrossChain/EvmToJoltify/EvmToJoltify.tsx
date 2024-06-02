@@ -28,7 +28,7 @@ export default observer(function EvmToJolyify() {
   const evmWalletStore = useStore('evmWalletStore')
 
   useEffect(()=>{
-    if ( targetChain?.chainType!=='cosmos' || !inputStore.targetAddress) return
+    if ( targetChain?.chainType!=='cosmos' || !inputStore.targetAddress?.startsWith('noble')) return
     getUsdcBalance({chainID: 'noble-1', address: cosmosAddrConvertor(inputStore.targetAddress, 'noble')}).then(balance => {
       setBalanceNoble(bn(balance).times(10**6).toFixed(0))
     })
