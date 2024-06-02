@@ -23,6 +23,7 @@ export type CosmosChain = {
   tokenType: 'native' | 'ibc',
   prefix: string,
   explorer: string,
+  nativeToken: string,
 }
 
 export type Chain = EvmChain | CosmosChain;
@@ -72,6 +73,7 @@ export const chains:Chain[] = [
     tokenType: 'ibc',
     prefix: 'jolt',
     explorer: 'https://explorer.joltify.io/joltify',
+    nativeToken: 'ujolt',
   },
   {
     chainID: 'noble-1',
@@ -84,5 +86,6 @@ export const chains:Chain[] = [
     tokenType: 'native',
     prefix: 'noble',
     explorer: 'https://www.mintscan.io/noble', // /accounts/address, /transactions/txhash
+    nativeToken: 'uusdc',
   },
 ]
