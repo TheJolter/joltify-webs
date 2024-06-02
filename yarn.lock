@@ -353,6 +353,13 @@
     "@jridgewell/resolve-uri" "^3.1.0"
     "@jridgewell/sourcemap-codec" "^1.4.14"
 
+"@keplr-wallet/types@^0.12.96":
+  version "0.12.96"
+  resolved "https://registry.yarnpkg.com/@keplr-wallet/types/-/types-0.12.96.tgz#a7735051b1f7cbcdf9b8c29010b1c3c45d195c19"
+  integrity sha512-tr4tPjMrJCsfRXXhhmqnpb9DqH9auJp3uuj8SvDB3pQTTaYJNxkdonLv1tYmXZZ6J9oWtk9WVEDTVgBQN/wisw==
+  dependencies:
+    long "^4.0.0"
+
 "@lerna/create@8.1.3":
   version "8.1.3"
   resolved "https://registry.yarnpkg.com/@lerna/create/-/create-8.1.3.tgz#6cbdcc762fe5eb5dde24b34761c7bb61940fcb2a"
