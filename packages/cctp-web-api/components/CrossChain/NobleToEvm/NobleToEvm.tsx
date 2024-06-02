@@ -60,7 +60,7 @@ export default observer(function NobleToEvm() {
     let client: SigningStargateClient
     setSending(true)
     try {
-      const signer = keplr.getOfflineSignerOnlyAmino('noble-1')
+      const signer = keplr.getOfflineSigner('noble-1') // amino not support /cosmos.bank.v1beta1.MsgSend
       client = await getSigningCircleClient({rpcEndpoint: sourceChain?.rpc!, signer}) as unknown as SigningStargateClient // only use telescope, cctp-example is support sendToken msg
     } catch(error:any) {
       setSending(false)
@@ -91,13 +91,17 @@ export default observer(function NobleToEvm() {
         return
       }
 
-      getAttestationAndMintOnServer()
+      
       let counter = 0
+      getAttestationAndMintOnServer() // must after let counter = 0
       function getAttestationAndMintOnServer() {
         counter ++
         if (counter > 9999) {
           setSending(false)
-          modalStore.showModal({title: 'Error', body: `Timeout getAttestation`})
+          modalStore.showModal({
+            title: `Timeout to mint USDC on ${targetChain?.chainName}`, 
+            body: `Copy and save this url: ${sourceChain?.explorer}/transactions/${res.transactionHash} and contact us for help`
+          })
           return
         }
         fetch(`https://iris-api.circle.com/v1/messages/4/${res.transactionHash}`)
@@ -119,18 +123,24 @@ export default observer(function NobleToEvm() {
             })
           }).then(res=>res.json()).then((res)=>{
             if (res.status!==1) {
-              modalStore.showModal({title: 'Error', body: res.error ?? res.message ?? res.toString()})
+              modalStore.showModal({
+                title: res.error ?? res.message ?? res.toString(), 
+                body: `Copy and save this url: ${sourceChain?.explorer}/transactions/${res.transactionHash} and contact us for help`
+              })
               return
             }
             modalStore.showModal({title: `✅ USDC Minted on ${targetChain?.chainName}`, 
               body: (
                 <div>
-                  <p><Link href={`${targetChain?.explorer}/tx/${res.transactionHash}`} target="_blank">Click here</Link> to view details on explorer</p>
+                  <p><Link href={`${targetChain?.explorer}/tx/${res.hash}`} target="_blank">Click here</Link> to view details on explorer</p>
                 </div>
               )
             })
           }).catch(error=>{
-            modalStore.showModal({title: '❌ Failed', body: error?.message??error.toString()})
+            modalStore.showModal({
+              title: error?.message??error.toString(), 
+              body: `Copy and save this url: ${sourceChain?.explorer}/transactions/${res.transactionHash} and contact us for help`
+            })
           }).finally(()=>{
             setSending(false)
           })
@@ -144,12 +154,15 @@ export default observer(function NobleToEvm() {
 
   return (
 <div className="grid grid-cols-2">
-  <Button color="success" onClick={handleSend}
-    disabled={sending}
-  >
-    Send to {targetChain?.chainName}
-    {sending&&<Spinner size="sm" color="default"/>}
-  </Button>
+  <div>
+    <Button color="success" onClick={handleSend}
+      disabled={sending}
+    >
+      Send to {targetChain?.chainName}
+      {sending&&<Spinner size="sm" color="default"/>}
+    </Button>
+    {sending&&<p>Please stay in this page while in processing</p>}
+  </div>
 </div>
   )
 })
