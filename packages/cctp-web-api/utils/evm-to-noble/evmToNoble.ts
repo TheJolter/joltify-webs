@@ -59,6 +59,8 @@ export default function evmToNoble({
       }).catch((error:any)=>{
         reject(error)
       })
+    }).catch((error:any)=>{
+      reject(error)
     })
   })
 }
