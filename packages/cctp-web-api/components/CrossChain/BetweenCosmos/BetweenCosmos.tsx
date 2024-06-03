@@ -12,7 +12,11 @@ import watchCosmosUsdcChange from "@/utils/watchCosmosTokenChange"
 import getUsdcBalance from "@/utils/get-usdc-balance"
 import cosmosAddrConvertor from "@/utils/cosmosAddrConvertor"
 
-export default observer(function BetweenCosmos() {
+export default observer(function BetweenCosmos({
+  disabled
+}:{
+  disabled?: boolean
+}) {
   const inputStore = useStore('inputStore')
   const balanceStore = useStore('balanceStore')
   const modalStore = useStore('modalStore')
@@ -104,7 +108,7 @@ export default observer(function BetweenCosmos() {
     <>
       <Button color="success"
         onClick={handleSendIbc}
-        disabled={sending}
+        disabled={sending || disabled}
       >
         IBC to {targetChain?.chainName}
         {sending&&<Spinner size="sm" color="default"/>}

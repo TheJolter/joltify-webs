@@ -197,23 +197,23 @@ export default observer(function Home() {
         </div>
 
         { sourceChain?.chainType === 'evm' && inputStore.targetChainID === 'joltify_1729-1' &&
-          <EvmToJolyify />
+          <EvmToJolyify disabled={!!errMsgDestAddr||!!errMsgAmount} />
         }
 
         { sourceChain?.chainType === 'evm' && inputStore.targetChainID === 'noble-1' &&
-          <EvmToNoble />
+          <EvmToNoble disabled={!!errMsgDestAddr||!!errMsgAmount} />
         }
 
         { inputStore.sourceChainID === 'joltify_1729-1' && targetChain?.chainType === 'evm' &&
-          <JoltifyToEvm />
+          <JoltifyToEvm disabled={!!errMsgDestAddr||!!errMsgAmount} />
         }
 
         { inputStore.sourceChainID === 'noble-1' && targetChain?.chainType === 'evm' &&
-          <NobleToEvm />
+          <NobleToEvm disabled={!!errMsgDestAddr||!!errMsgAmount} />
         }
 
         { sourceChain?.chainType==='cosmos' && targetChain?.chainType==='cosmos' &&
-          <BetweenCosmos />
+          <BetweenCosmos disabled={!!errMsgDestAddr||!!errMsgAmount} />
         }
       </div>
     </section>

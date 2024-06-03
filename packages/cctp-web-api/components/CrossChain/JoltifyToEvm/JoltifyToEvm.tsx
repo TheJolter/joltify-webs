@@ -15,7 +15,11 @@ import { circle, cosmos, getSigningCircleClient } from "codegen-circle"
 import { params } from "@/app/api/params/config"
 import { N, ethers } from "ethers"
 
-export default observer(function JoltifyToEvm() {
+export default observer(function JoltifyToEvm({
+  disabled
+}:{
+  disabled?: boolean
+}) {
   const inputStore = useStore('inputStore')
   const cosmosWalletStore = useStore('cosmosWalletStore')
   const modalStore = useStore('modalStore')
@@ -262,7 +266,7 @@ export default observer(function JoltifyToEvm() {
 <div>
   <div className="grid grid-cols-3">
     <Button color={receivedOnNoble?'default':'success'}
-      disabled={receivedOnNoble||sendingToNoble}
+      disabled={receivedOnNoble||sendingToNoble || disabled}
       onClick={handleSendToNoble}
     >
       1. Send to Noble

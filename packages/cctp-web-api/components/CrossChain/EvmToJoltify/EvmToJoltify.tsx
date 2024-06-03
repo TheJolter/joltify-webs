@@ -14,7 +14,11 @@ import { nobleFee } from "@/config";
 import { bn } from "utils";
 import cosmosAddrConvertor from "@/utils/cosmosAddrConvertor";
 
-export default observer(function EvmToJolyify() {
+export default observer(function EvmToJolyify({
+  disabled
+}:{
+  disabled?: boolean
+}) {
   const inputStore = useStore('inputStore')
   const modalStore = useStore('modalStore')
   const balanceStore = useStore('balanceStore')
@@ -172,7 +176,7 @@ export default observer(function EvmToJolyify() {
 <div>
   <div className="grid grid-cols-3">
     <Button
-      disabled={sendingToNoble||nobleReceived}
+      disabled={sendingToNoble||nobleReceived || disabled}
       color={nobleReceived?'default':'success'}
       onClick={handleSendToNoble}
     >

@@ -11,7 +11,11 @@ import { nobleFee } from "@/config"
 import { params } from "@/app/api/params/config"
 import { SigningStargateClient } from "@cosmjs/stargate"
 
-export default observer(function NobleToEvm() {
+export default observer(function NobleToEvm({
+  disabled
+}:{
+  disabled?: boolean
+}) {
   const inputStore = useStore('inputStore')
   const cosmosWalletStore = useStore('cosmosWalletStore')
   const modalStore = useStore('modalStore')
@@ -157,7 +161,7 @@ export default observer(function NobleToEvm() {
   return (
 <div>
   <Button color="success" onClick={handleSend}
-    disabled={sending}
+    disabled={sending || disabled}
   >
     Send to {targetChain?.chainName}
     {sending&&<Spinner size="sm" color="default"/>}

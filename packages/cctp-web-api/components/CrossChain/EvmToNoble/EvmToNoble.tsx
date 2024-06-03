@@ -8,7 +8,11 @@ import watchCosmosUsdcChange from "@/utils/watchCosmosTokenChange"
 import { chains } from "@/config/chains"
 import getUsdcBalance from "@/utils/get-usdc-balance"
 
-export default observer(function EvmToNoble() {
+export default observer(function EvmToNoble({
+  disabled
+}:{
+  disabled?: boolean
+}) {
   const inputStore = useStore('inputStore')
   const modalStore = useStore('modalStore')
   const evmWalletStore = useStore('evmWalletStore')
@@ -58,7 +62,7 @@ export default observer(function EvmToNoble() {
   return (
     <Button color="success"
       onClick={handleEvmToNoble}
-      disabled={sending}
+      disabled={sending || disabled}
     >
       Send to Noble
       {sending&&<Spinner size="sm" color="default"/>}
