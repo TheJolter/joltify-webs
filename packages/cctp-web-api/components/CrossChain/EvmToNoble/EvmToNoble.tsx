@@ -8,6 +8,7 @@ import watchCosmosUsdcChange from "@/utils/watchCosmosTokenChange"
 import { chains } from "@/config/chains"
 import getUsdcBalance from "@/utils/get-usdc-balance"
 import watchCctpAttastation from "@/utils/watchCctpAttastation"
+import allowanceCheckAndApprove from "@/utils/allowanceCheckAndApprove"
 
 export default observer(function EvmToNoble({
   disabled
@@ -22,9 +23,25 @@ export default observer(function EvmToNoble({
   const targetChain = chains.find(c => c.chainID === inputStore.targetChainID)
   const sourceChain = chains.find(c => c.chainID === inputStore.sourceChainID)
 
-  const handleEvmToNoble = () => {
+  const handleEvmToNoble = async () => {
     if (!evmWalletStore.address || Number(inputStore.amount)<=0 || !inputStore.targetAddress) return
     setSending(true)
+    try {
+      console.log('approve start')
+      await allowanceCheckAndApprove({
+        evmChainID: sourceChain?.chainID ?? '',
+        amount: inputStore.amount
+      })
+      console.log('approve end')
+    } catch(error:any) {
+      setSending(false)
+      modalStore.showModal({
+        title: 'Error',
+        body: error.message ?? error.toString(),
+      })
+      return
+    }
+    console.log('approve success, evmToNoble start')
     evmToNoble({
       sourceChainID: inputStore.sourceChainID,
       amount: inputStore.amount,

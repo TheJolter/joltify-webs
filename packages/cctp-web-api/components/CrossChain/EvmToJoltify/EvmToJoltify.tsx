@@ -13,6 +13,7 @@ import { Keplr } from "@keplr-wallet/types"
 import { nobleFee } from "@/config";
 import { bn } from "utils";
 import cosmosAddrConvertor from "@/utils/cosmosAddrConvertor";
+import allowanceCheckAndApprove from "@/utils/allowanceCheckAndApprove";
 
 export default observer(function EvmToJolyify({
   disabled
@@ -41,9 +42,26 @@ export default observer(function EvmToJolyify({
     })
   }, [inputStore.targetAddress, targetChain?.chainType])
 
-  const handleSendToNoble = () => {
+  const handleSendToNoble = async () => {
     if (!evmWalletStore.address || Number(inputStore.amount)<=0 || !inputStore.targetAddress) return
     setSendingToNoble(true)
+
+    try {
+      console.log('approve start')
+      await allowanceCheckAndApprove({
+        evmChainID: sourceChain?.chainID ?? '',
+        amount: inputStore.amount
+      })
+      console.log('approve end')
+    } catch(error:any) {
+      setSendingToNoble(false)
+      modalStore.showModal({
+        title: 'Error',
+        body: error.message ?? error.toString(),
+      })
+      return
+    }
+
     evmToNoble({
       sourceChainID: inputStore.sourceChainID,
       amount: inputStore.amount,
