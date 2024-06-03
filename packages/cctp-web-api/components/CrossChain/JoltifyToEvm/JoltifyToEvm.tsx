@@ -82,6 +82,18 @@ export default observer(function JoltifyToEvm() {
             address: cosmosAddrConvertor(cosmosWalletStore.address!, 'noble')
           })
           setReceivedOnNoble(true)
+          modalStore.showModal({
+            title: 'USDC received on Noble',
+            body: (
+              <div>
+                <p className="mb-2">Now you send to {targetChain?.chainName} by clicking this button:</p>
+                <Button color="success" onClick={()=>{
+                  handleSendToEvm()
+                  modalStore.closeModal()
+                }}>3. IBC to Joltify</Button>
+              </div>
+            )
+          })
         }).catch((e) => {
           modalStore.showModal({
             title: `It may take a while to received on Noble, please check later`,
