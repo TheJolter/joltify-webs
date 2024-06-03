@@ -36,7 +36,7 @@ export default observer(function BetweenCosmos() {
     if (sourceChain.chainID === 'noble-1') {
       const balanceNoble = balanceStore.getUsdcBalance('noble-1', sender)
       if (bn(amount).plus(gasFee).gt( bn(balanceNoble).times(10**6) )) {
-        amount = bn(balanceNoble).minus(gasFee).toFixed(0)
+        amount = bn(balanceNoble).times(10**6).minus(gasFee).toFixed(0)
       }
     }
     const msg:MsgTransferEncodeObject = {
