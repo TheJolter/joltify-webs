@@ -5,7 +5,7 @@ import { observer } from "mobx-react-lite";
 import evmToNoble from "@/utils/evm-to-noble/evmToNoble";
 import getUsdcBalance from "@/utils/get-usdc-balance";
 import { useStore } from "@/stores/hooks";
-import { chains } from "@/config/chains";
+import { CosmosChain, chains } from "@/config/chains";
 import watchCosmosUsdcChange from "@/utils/watchCosmosTokenChange";
 import { MsgTransferEncodeObject, SigningStargateClient } from "@cosmjs/stargate"
 import { Decimal } from "@cosmjs/math"
@@ -23,14 +23,17 @@ export default observer(function EvmToJolyify() {
   const [sendingToJoltify, setSendingToJoltify] = useState(false)
   const targetChain = chains.find(c => c.chainID === inputStore.targetChainID)
   const sourceChain = chains.find(c => c.chainID === inputStore.sourceChainID)
-  const nobleChain = chains.find(c => c.chainID==='noble-1')
-  const [balanceNoble, setBalanceNoble] = useState('0') // base amount
+  const nobleChain = chains.find(c => c.chainID==='noble-1') as CosmosChain
+  // const [balanceNoble, setBalanceNoble] = useState('0') // base amount
   const evmWalletStore = useStore('evmWalletStore')
 
   useEffect(()=>{
-    if ( targetChain?.chainType!=='cosmos' || !inputStore.targetAddress?.startsWith('noble')) return
+    if ( 
+      targetChain?.chainType!=='cosmos' || !inputStore.targetAddress || inputStore.targetAddress.startsWith('0x')
+    ) return
     getUsdcBalance({chainID: 'noble-1', address: cosmosAddrConvertor(inputStore.targetAddress, 'noble')}).then(balance => {
-      setBalanceNoble(bn(balance).times(10**6).toFixed(0))
+      console.log('getUsdcBalance EvmToJolyify', balance)
+      // setBalanceNoble(bn(balance).times(10**6).toFixed(0))
     })
   }, [inputStore.targetAddress, targetChain?.chainType])
 
@@ -45,8 +48,21 @@ export default observer(function EvmToJolyify() {
       // watch NOBLE balance change
       watchCosmosUsdcChange({chainID: 'noble-1', address: cosmosAddrConvertor(inputStore.targetAddress, 'noble'), timeoutSecond: 99999})
       .then(({newBalance}) => {
-        setBalanceNoble(newBalance)
+        console.log('newBalance', newBalance)
+        // setBalanceNoble(newBalance)
         setNobleReceived(true)
+        modalStore.showModal({
+          title: 'USDC received on Noble',
+          body: (
+            <div>
+              <p className="mb-2">Now you can IBC to Joltify by clicking this button:</p>
+              <Button color="success" onClick={()=>{
+                handleNobleToJoltify()
+                modalStore.closeModal()
+              }}>3. IBC to Joltify</Button>
+            </div>
+          )
+        })
       }).catch((e) => {
         modalStore.showModal({
           title: 'It may take a while to received on noble, please check later',
@@ -73,6 +89,16 @@ export default observer(function EvmToJolyify() {
     const client = await SigningStargateClient.connectWithSigner(nobleChain.rpc, signer, {gasPrice: {amount: Decimal.fromUserInput('4000', 0), denom: 'uusdc'}})
     const gasFee = bn(nobleFee).times(1e6).toFixed(0)
     let amount = bn(inputStore.amount).times(1e6).toFixed(0)
+    // console.log('balanceNoble', balanceNoble)
+    let balanceNoble = '0'
+    try {
+      balanceNoble = (await (await fetch(`${nobleChain.lcd}/cosmos/bank/v1beta1/balances/${cosmosAddrConvertor(inputStore.targetAddress, 'noble')}`)).json()).balances?.find((b: any) => b.denom === 'uusdc').amount
+      console.log('balanceNoble2', balanceNoble)
+    } catch(e) {
+      modalStore.showModal({body: 'Failed to get balance from Noble', title: 'Error'})
+      setSendingToJoltify(false);
+      return
+    }
     if (bn(amount).plus(gasFee).gt(balanceNoble)) {
       amount = bn(balanceNoble).minus(gasFee).toFixed(0)
     }
