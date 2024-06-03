@@ -143,26 +143,29 @@ export default observer(function EvmToJolyify() {
   }
 
   return (
-<div className="grid grid-cols-3">
-  <Button
-    disabled={sendingToNoble||nobleReceived}
-    color={nobleReceived?'default':'success'}
-    onClick={handleSendToNoble}
-  >
-    1. Send to Noble
-    {sendingToNoble&&<Spinner size="sm" color="default"/>}
-  </Button>
-  <div className={`flex items-center justify-center ${!nobleReceived&&'text-gray-500'}`}>
-    2. Received on Noble
+<div>
+  <div className="grid grid-cols-3">
+    <Button
+      disabled={sendingToNoble||nobleReceived}
+      color={nobleReceived?'default':'success'}
+      onClick={handleSendToNoble}
+    >
+      1. Send to Noble
+      {sendingToNoble&&<Spinner size="sm" color="default"/>}
+    </Button>
+    <div className={`flex items-center justify-center ${!nobleReceived&&'text-gray-500'}`}>
+      2. Received on Noble
+    </div>
+    <Button 
+      disabled={!nobleReceived||sendingToJoltify}
+      color={nobleReceived?'success':'default'}
+      onClick={handleNobleToJoltify}
+    >
+      3. IBC to Joltify
+      {sendingToJoltify&&<Spinner size="sm" color="default"/>}
+    </Button>
   </div>
-  <Button 
-    disabled={!nobleReceived||sendingToJoltify}
-    color={nobleReceived?'success':'default'}
-    onClick={handleNobleToJoltify}
-  >
-    3. IBC to Joltify
-    {sendingToJoltify&&<Spinner size="sm" color="default"/>}
-  </Button>
+  <p className=" text-orange-600 text-xl">Plaese stay in this page while in processing</p>
 </div>
   )
 })
