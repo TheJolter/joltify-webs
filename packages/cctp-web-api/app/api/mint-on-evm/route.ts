@@ -4,13 +4,10 @@ import { NextRequest, NextResponse } from "next/server";
 import { txExample } from "../test/noble-tx-analysis/tx";
 import { verifyTx } from "./verify-tx";
 import { submitEvmMint } from "@/utils/submit-evm-mint/submit-evm-mint";
+import { Attestation } from "@/types";
 
 type ReqBody = {
-  messages: {
-    attestation: string,
-    message: string,
-    eventNonce: string
-  }[],
+  messages: Attestation[],
   transactionHash: string
 }
 
