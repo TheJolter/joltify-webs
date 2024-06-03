@@ -6,7 +6,7 @@ import { useState } from "react"
 import { circle, cosmos, getSigningCircleClient } from 'codegen-circle'
 import { Keplr } from "@keplr-wallet/types"
 import cosmosAddrConvertor from "@/utils/cosmosAddrConvertor"
-import { bn } from "utils"
+import { bigNumberCeil, bn } from "utils"
 import { nobleFee } from "@/config"
 import { params } from "@/app/api/params/config"
 import { SigningStargateClient } from "@cosmjs/stargate"
@@ -19,6 +19,7 @@ export default observer(function NobleToEvm() {
 
   const targetChain = chains.find(chain => chain.chainID === inputStore.targetChainID)
   const sourceChain = chains.find(chain => chain.chainID === inputStore.sourceChainID)
+  const param = params.targetChains.find((item) => item.domain === targetChain?.domain)
 
   const [sending, setSending] = useState(false)
 
@@ -35,7 +36,7 @@ export default observer(function NobleToEvm() {
     const buffer = Buffer.from(mintRecipient, "hex");
     const mintRecipientBytes = new Uint8Array(buffer)
 
-    const param = params.targetChains.find((item) => item.domain === targetChain?.domain)
+    
     const gasFee = bn(nobleFee).times(1e6).toFixed(0)
     const routeFee = param?.fee || Infinity
     let amount = bn(inputStore.amount).times(10**6).toFixed(0)
@@ -154,16 +155,17 @@ export default observer(function NobleToEvm() {
   }
 
   return (
-<div className="grid grid-cols-2">
-  <div>
-    <Button color="success" onClick={handleSend}
-      disabled={sending}
-    >
-      Send to {targetChain?.chainName}
-      {sending&&<Spinner size="sm" color="default"/>}
-    </Button>
-    {sending&&<p>Please stay in this page while in processing</p>}
-  </div>
+<div>
+  <Button color="success" onClick={handleSend}
+    disabled={sending}
+  >
+    Send to {targetChain?.chainName}
+    {sending&&<Spinner size="sm" color="default"/>}
+  </Button>
+  <p className="text-sm text-gray-500 mt-1">
+    Gas fee: less than {nobleFee} USDC; Router fee: { bigNumberCeil(bn(param?.fee||0).div(10**6), 6).toFixed() } USDC
+  </p>
+  {sending&&<p className="mt-5">Please stay in this page while in processing</p>}
 </div>
   )
 })

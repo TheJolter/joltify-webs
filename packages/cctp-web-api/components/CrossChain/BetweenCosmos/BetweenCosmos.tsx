@@ -101,12 +101,17 @@ export default observer(function BetweenCosmos() {
   }
 
   return (
-    <Button color="success"
-      onClick={handleSendIbc}
-      disabled={sending}
-    >
-      IBC to {targetChain?.chainName}
-      {sending&&<Spinner size="sm" color="default"/>}
-    </Button>
+    <>
+      <Button color="success"
+        onClick={handleSendIbc}
+        disabled={sending}
+      >
+        IBC to {targetChain?.chainName}
+        {sending&&<Spinner size="sm" color="default"/>}
+      </Button>
+      {sourceChain.chainID==='noble-1'&&<p className="text-sm text-gray-500 mt-1">
+        Gas fee: less than {nobleFee} USDC
+      </p>}
+    </>
   )
 })

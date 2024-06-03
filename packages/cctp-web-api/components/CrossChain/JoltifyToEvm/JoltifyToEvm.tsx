@@ -6,7 +6,7 @@ import { Keplr } from "@keplr-wallet/types"
 import { Button, Link, Spinner } from "@nextui-org/react"
 import { observer } from "mobx-react-lite"
 import { useEffect, useState } from "react"
-import { bn } from "utils"
+import { bigNumberCeil, bn } from "utils"
 import { Decimal } from "@cosmjs/math"
 import watchCosmosUsdcChange from "@/utils/watchCosmosTokenChange"
 import cosmosAddrConvertor from "@/utils/cosmosAddrConvertor"
@@ -24,6 +24,7 @@ export default observer(function JoltifyToEvm() {
   const targetChain = chains.find(chain => chain.chainID === inputStore.targetChainID)
   const sourceChain = chains.find(chain => chain.chainID === inputStore.sourceChainID) as CosmosChain
   const nobleChain = chains.find(chain => chain.chainID === 'noble-1') as CosmosChain
+  const param = params.targetChains.find((item) => item.domain === targetChain?.domain)
 
   const [sendingToNoble, setSendingToNoble] = useState(false)
   const [receivedOnNoble, setReceivedOnNoble] = useState(false)
@@ -141,7 +142,6 @@ export default observer(function JoltifyToEvm() {
     const buffer = Buffer.from(mintRecipient, "hex");
     const mintRecipientBytes = new Uint8Array(buffer)
 
-    const param = params.targetChains.find((item) => item.domain === targetChain?.domain)
     const gasFee = bn(nobleFee).times(1e6).toFixed(0)
     const routeFee = param?.fee || Infinity
     let amount = bn(inputStore.amount).times(10**6).toFixed(0)
@@ -277,7 +277,10 @@ export default observer(function JoltifyToEvm() {
       {sendingToEvm&&<Spinner size="sm" color="default"/>}
     </Button>
   </div>
-  <p className=" text-orange-600 text-xl">Plaese stay in this page while in processing</p>
+  <p className="text-sm text-gray-500 mt-1">
+    Gas fee: less than {nobleFee} USDC; Router fee: { bigNumberCeil(bn(param?.fee||0).div(10**6), 6).toFixed() } USDC
+  </p>
+  <p className=" text-orange-600 text-xl mt-5">Plaese stay in this page while in processing</p>
 </div>
   )
 })
