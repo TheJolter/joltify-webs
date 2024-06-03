@@ -95,7 +95,7 @@ export default observer(function JoltifyToEvm({
                 <Button color="success" onClick={()=>{
                   handleSendToEvm()
                   modalStore.closeModal()
-                }}>3. IBC to Joltify</Button>
+                }}>3. Send to {targetChain?.chainName}</Button>
               </div>
             )
           })
