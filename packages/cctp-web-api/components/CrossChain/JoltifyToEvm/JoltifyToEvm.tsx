@@ -135,7 +135,7 @@ export default observer(function JoltifyToEvm() {
     let amount = bn(inputStore.amount).times(10**6).toFixed(0)
     const balanceNoble = balanceStore.getUsdcBalance('noble-1', from)
     if (bn(amount).plus(gasFee).plus(routeFee).gt( bn(balanceNoble).times(10**6) )) {
-      amount = bn(balanceNoble).minus(gasFee).minus(routeFee).toFixed(0)
+      amount = bn(bn(balanceNoble).times(10**6)).minus(gasFee).minus(routeFee).toFixed(0)
     }
 
     const msg = depositForBurn({

@@ -3,7 +3,7 @@ import { useStore } from "@/stores/hooks"
 import { Button, Link, Spinner } from "@nextui-org/react"
 import { observer } from "mobx-react-lite"
 import { useState } from "react"
-import {circle, cosmos, getSigningCircleClient} from 'codegen-circle'
+import { circle, cosmos, getSigningCircleClient } from 'codegen-circle'
 import { Keplr } from "@keplr-wallet/types"
 import cosmosAddrConvertor from "@/utils/cosmosAddrConvertor"
 import { bn } from "utils"
@@ -25,8 +25,8 @@ export default observer(function NobleToEvm() {
   const handleSend = async () => {
     const keplr:Keplr = (window as any).keplr
     if (!keplr || !cosmosWalletStore.address || !inputStore.targetAddress) return
-    const {depositForBurn} = circle.cctp.v1.MessageComposer.withTypeUrl
-    const {send} = cosmos.bank.v1beta1.MessageComposer.withTypeUrl
+    const { depositForBurn } = circle.cctp.v1.MessageComposer.withTypeUrl
+    const { send } = cosmos.bank.v1beta1.MessageComposer.withTypeUrl
     const from = cosmosAddrConvertor(cosmosWalletStore.address!, 'noble')
 
     const cleanedMintRecipient = inputStore.targetAddress.replace(/^0x/, '');
@@ -40,8 +40,9 @@ export default observer(function NobleToEvm() {
     const routeFee = param?.fee || Infinity
     let amount = bn(inputStore.amount).times(10**6).toFixed(0)
     const balanceNoble = balanceStore.getUsdcBalance('noble-1', from)
+    console.log('balanceNoble', balanceNoble)
     if (bn(amount).plus(gasFee).plus(routeFee).gt( bn(balanceNoble).times(10**6) )) {
-      amount = bn(balanceNoble).minus(gasFee).minus(routeFee).toFixed(0)
+      amount = bn(bn(balanceNoble).times(10**6)).minus(gasFee).minus(routeFee).toFixed(0)
     }
 
     const msg = depositForBurn({
@@ -91,7 +92,6 @@ export default observer(function NobleToEvm() {
         return
       }
 
-      
       let counter = 0
       getAttestationAndMintOnServer() // must after let counter = 0
       function getAttestationAndMintOnServer() {
@@ -146,6 +146,7 @@ export default observer(function NobleToEvm() {
           })
         })
       }
+
     }).catch((error)=>{
       setSending(false)
       modalStore.showModal({title: 'Error', body: error?.message??error.toString()})
