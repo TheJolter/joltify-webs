@@ -9,13 +9,13 @@ export const params = {
     },
     {
       chainName: 'Avalanche',
-      fee: '1000000',
+      fee: '1',
       time: "20 seconds",
       domain: 1, 
     },
     {
       chainName: 'Arbitrum',
-      fee: '1000000',
+      fee: '1',
       time: "13 minutes",
       domain: 3 
     }

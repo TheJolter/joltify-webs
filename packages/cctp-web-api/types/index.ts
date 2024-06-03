@@ -9,3 +9,7 @@ export type Attestation = { // eg: https://iris-api.circle.com/v1/messages/1/0x3
   message: string,
   eventNonce: string
 }
+
+export type AttestationType = {
+  messages: Attestation[]
+}

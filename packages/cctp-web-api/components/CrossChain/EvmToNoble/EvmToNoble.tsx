@@ -7,6 +7,7 @@ import { Spinner, Link } from "@nextui-org/react";
 import watchCosmosUsdcChange from "@/utils/watchCosmosTokenChange"
 import { chains } from "@/config/chains"
 import getUsdcBalance from "@/utils/get-usdc-balance"
+import watchCctpAttastation from "@/utils/watchCctpAttastation"
 
 export default observer(function EvmToNoble({
   disabled
@@ -28,7 +29,16 @@ export default observer(function EvmToNoble({
       sourceChainID: inputStore.sourceChainID,
       amount: inputStore.amount,
       targetAddress: inputStore.targetAddress
-    }).then(() => {
+    }).then((txRpt) => {
+      watchCctpAttastation({domain: sourceChain?.domain!, txHash: txRpt.hash}).then((attestation) => {
+        fetch('/api/mint-on-noble', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify(attestation)
+        }).then(res => res.json()).then(console.log).catch(console.error)
+      })
       watchCosmosUsdcChange({chainID: inputStore.targetChainID, address: inputStore.targetAddress, timeoutSecond: 99999}).then(() => {
         modalStore.showModal({
           title: '✅ Success',
