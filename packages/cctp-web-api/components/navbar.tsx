@@ -9,6 +9,7 @@ import { ThemeSwitch } from "@/components/theme-switch";
 import { Button } from "@nextui-org/react";
 import EvmWalletButton from "./EvmWalletButton/EvmWalletButton";
 import CosmosWalletButton from "./CosmosWalletButton/CosmosWalletButton";
+import Link from "next/link";
 
 export const Navbar = () => {
   return (
@@ -20,6 +21,12 @@ export const Navbar = () => {
             <p className="font-bold text-inherit pl-2">USDC Bridge</p>
           </NextLink>
         </NavbarBrand>
+      </NavbarContent>
+
+      <NavbarContent justify="end">
+        <NavbarItem>
+          <Link href='https://app.pathr.io' target="_blank" className="underline font-bold">Pathr</Link>
+        </NavbarItem>
       </NavbarContent>
 
       <NavbarContent
