@@ -27,6 +27,24 @@ export default observer(function EvmToNoble({
     if (!evmWalletStore.address || Number(inputStore.amount)<=0 || !inputStore.targetAddress) return
     setSending(true)
     try {
+      
+      const ethereum = (window as any).ethereum as any
+      if (ethereum.chainId !== sourceChain?.chainID ) {
+        try {
+          await ethereum.request({
+            method: 'wallet_switchEthereumChain',
+            params: [{ chainId: sourceChain?.chainID }]
+          })
+        } catch (error:any) {
+          setSending(false)
+          modalStore.showModal({
+            title: 'Error',
+            body: error.message ?? error.toString(),
+          })
+          return
+        }
+      }
+
       console.log('approve start')
       await allowanceCheckAndApprove({
         evmChainID: sourceChain?.chainID ?? '',

@@ -47,6 +47,23 @@ export default observer(function EvmToJolyify({
     if (!evmWalletStore.address || Number(inputStore.amount)<=0 || !inputStore.targetAddress) return
     setSendingToNoble(true)
 
+    const ethereum = (window as any).ethereum as any
+      if (ethereum.chainId !== sourceChain?.chainID ) {
+        try {
+          await ethereum.request({
+            method: 'wallet_switchEthereumChain',
+            params: [{ chainId: sourceChain?.chainID }]
+          })
+        } catch (error:any) {
+          setSendingToNoble(false)
+          modalStore.showModal({
+            title: 'Error',
+            body: error.message ?? error.toString(),
+          })
+          return
+        }
+      }
+
     try {
       console.log('approve start')
       await allowanceCheckAndApprove({
