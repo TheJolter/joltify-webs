@@ -28,9 +28,9 @@ export default observer(function Menu() {
   <div className="relative z-10 px-[6px] flex items-center h-[58px]">
     <MainButton className="h-[46px] font-semibold text-lg" fullWidth
       onClick={()=>window.open('https://app.pathr.io')}
+      style={noneSelectedStyle}
     >Swap</MainButton>
     <MainButton className="h-[46px] font-semibold text-lg" fullWidth
-      style={noneSelectedStyle}
     >USDC</MainButton>
   </div>
   <div className="rounded-full absolute w-full h-[58px] top-0" 
