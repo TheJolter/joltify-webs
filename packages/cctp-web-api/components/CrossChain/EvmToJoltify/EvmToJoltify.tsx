@@ -14,6 +14,7 @@ import { nobleFee } from "@/config";
 import { bn } from "utils";
 import cosmosAddrConvertor from "@/utils/cosmosAddrConvertor";
 import allowanceCheckAndApprove from "@/utils/allowanceCheckAndApprove";
+import watchCctpAttastation from "@/utils/watchCctpAttastation";
 
 export default observer(function EvmToJolyify({
   disabled
@@ -66,7 +67,17 @@ export default observer(function EvmToJolyify({
       sourceChainID: inputStore.sourceChainID,
       amount: inputStore.amount,
       targetAddress: inputStore.targetAddress
-    }).then(() => {
+    }).then((txRpt) => {
+      watchCctpAttastation({domain: sourceChain?.domain!, txHash: txRpt.hash}).then((attestation) => {
+        fetch('/api/mint-on-noble', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify(attestation)
+        }).then(res => res.json()).then(console.log).catch(console.error)
+      })
+
       // watch NOBLE balance change
       watchCosmosUsdcChange({chainID: 'noble-1', address: cosmosAddrConvertor(inputStore.targetAddress, 'noble'), timeoutSecond: 99999})
       .then(({newBalance}) => {
