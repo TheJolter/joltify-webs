@@ -284,7 +284,7 @@ export default observer(function JoltifyToEvm({
   <p className="text-sm text-gray-500 mt-1">
     Gas fee: less than {nobleFee} USDC; Router fee: { bigNumberCeil(bn(param?.fee||0).div(10**6), 6).toFixed() } USDC
   </p>
-  <p className=" text-orange-600 text-xl mt-5">Plaese stay in this page while in processing</p>
+  <p className=" text-orange-600 text-xl mt-5">Please stay on this page during processing</p>
 </div>
   )
 })
