@@ -170,8 +170,8 @@ export default observer(function JoltifyToEvm({
     let client: SigningStargateClient
     setSendingToEvm(true)
     try {
-      const signer = keplr.getOfflineSigner('noble-1') // amino not support /cosmos.bank.v1beta1.MsgSend
-      client = await getSigningCircleClient({rpcEndpoint: nobleChain?.rpc!, signer}) as unknown as SigningStargateClient // only use telescope, cctp-example is support sendToken msg
+      const signer = await keplr.getOfflineSignerAuto('noble-1')
+      client = await getSigningCircleClient({rpcEndpoint: nobleChain?.rpc!, signer}) as unknown as SigningStargateClient
     } catch(error:any) {
       setSendingToEvm(false)
       modalStore.showModal({title: 'Error', body: error?.message??error.toString()})
