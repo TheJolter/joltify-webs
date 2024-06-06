@@ -1,8 +1,8 @@
-// @ts-nocheck
 import { GeneratedType, Registry, OfflineSigner } from "@cosmjs/proto-signing";
 import { AminoTypes, SigningStargateClient } from "@cosmjs/stargate";
 import { HttpEndpoint } from "@cosmjs/tendermint-rpc";
 import * as cosmosAuthV1beta1TxRegistry from "./auth/v1beta1/tx.registry";
+import * as circleCctpV1TxRegistry from "../circle/cctp/v1/tx.registry";
 import * as cosmosAuthzV1beta1TxRegistry from "./authz/v1beta1/tx.registry";
 import * as cosmosBankV1beta1TxRegistry from "./bank/v1beta1/tx.registry";
 import * as cosmosConsensusV1TxRegistry from "./consensus/v1/tx.registry";
@@ -28,6 +28,7 @@ import * as cosmosMintV1beta1TxAmino from "./mint/v1beta1/tx.amino";
 import * as cosmosStakingV1beta1TxAmino from "./staking/v1beta1/tx.amino";
 import * as cosmosUpgradeV1beta1TxAmino from "./upgrade/v1beta1/tx.amino";
 import * as cosmosVestingV1beta1TxAmino from "./vesting/v1beta1/tx.amino";
+import * as circleCctpV1TxAmino from "../circle/cctp/v1/tx.amino";
 export const cosmosAminoConverters = {
   ...cosmosAuthV1beta1TxAmino.AminoConverter,
   ...cosmosAuthzV1beta1TxAmino.AminoConverter,
@@ -41,14 +42,16 @@ export const cosmosAminoConverters = {
   ...cosmosMintV1beta1TxAmino.AminoConverter,
   ...cosmosStakingV1beta1TxAmino.AminoConverter,
   ...cosmosUpgradeV1beta1TxAmino.AminoConverter,
-  ...cosmosVestingV1beta1TxAmino.AminoConverter
+  ...cosmosVestingV1beta1TxAmino.AminoConverter,
+  ...circleCctpV1TxAmino.AminoConverter
 };
 export const cosmosProtoRegistry: ReadonlyArray<[string, GeneratedType]> = [...cosmosAuthV1beta1TxRegistry.registry, ...cosmosAuthzV1beta1TxRegistry.registry, ...cosmosBankV1beta1TxRegistry.registry, ...cosmosConsensusV1TxRegistry.registry, ...cosmosDistributionV1beta1TxRegistry.registry, ...cosmosFeegrantV1beta1TxRegistry.registry, ...cosmosGovV1TxRegistry.registry, ...cosmosGovV1beta1TxRegistry.registry, ...cosmosGroupV1TxRegistry.registry, ...cosmosMintV1beta1TxRegistry.registry, ...cosmosStakingV1beta1TxRegistry.registry, ...cosmosUpgradeV1beta1TxRegistry.registry, ...cosmosVestingV1beta1TxRegistry.registry];
+export const circleProtoRegistry: ReadonlyArray<[string, GeneratedType]> = [...circleCctpV1TxRegistry.registry];
 export const getSigningCosmosClientOptions = (): {
   registry: Registry;
   aminoTypes: AminoTypes;
 } => {
-  const registry = new Registry([...cosmosProtoRegistry]);
+  const registry = new Registry([...cosmosProtoRegistry, ...circleProtoRegistry]);
   const aminoTypes = new AminoTypes({
     ...cosmosAminoConverters
   });

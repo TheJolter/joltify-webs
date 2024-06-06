@@ -3,7 +3,7 @@ import { useStore } from "@/stores/hooks"
 import { Button, Link, Spinner } from "@nextui-org/react"
 import { observer } from "mobx-react-lite"
 import { useState } from "react"
-import { circle, cosmos, getSigningCircleClient } from 'codegen-circle'
+import { circle, cosmos, getSigningCircleClient, getSigningCosmosClient } from 'codegen-circle'
 import { Keplr } from "@keplr-wallet/types"
 import cosmosAddrConvertor from "@/utils/cosmosAddrConvertor"
 import { bigNumberCeil, bn } from "utils"
@@ -68,6 +68,9 @@ export default observer(function NobleToEvm({
     try {
       const signer = await keplr.getOfflineSignerAuto('noble-1')
       client = await getSigningCircleClient({rpcEndpoint: sourceChain?.rpc!, signer}) as unknown as SigningStargateClient
+
+      // const signer = keplr.getOfflineSignerOnlyAmino('noble-1')
+      // client = await getSigningCosmosClient({rpcEndpoint: sourceChain?.rpc!, signer}) as unknown as SigningStargateClient
     } catch(error:any) {
       setSending(false)
       modalStore.showModal({title: 'Error', body: error?.message??error.toString()})
