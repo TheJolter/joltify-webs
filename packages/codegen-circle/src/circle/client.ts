@@ -1,11 +1,13 @@
-// @ts-nocheck
 import { GeneratedType, Registry, OfflineSigner } from "@cosmjs/proto-signing";
 import { defaultRegistryTypes, AminoTypes, SigningStargateClient } from "@cosmjs/stargate";
 import { HttpEndpoint } from "@cosmjs/tendermint-rpc";
 import * as circleCctpV1TxRegistry from "./cctp/v1/tx.registry";
 import * as circleCctpV1TxAmino from "./cctp/v1/tx.amino";
+import * as cosmosBankV1beta1TxAmino from "../cosmos/bank/v1beta1/tx.amino";
+
 export const circleAminoConverters = {
-  ...circleCctpV1TxAmino.AminoConverter
+  ...circleCctpV1TxAmino.AminoConverter,
+  ...cosmosBankV1beta1TxAmino.AminoConverter,
 };
 export const circleProtoRegistry: ReadonlyArray<[string, GeneratedType]> = [...circleCctpV1TxRegistry.registry];
 export const getSigningCircleClientOptions = ({
@@ -16,7 +18,10 @@ export const getSigningCircleClientOptions = ({
   registry: Registry;
   aminoTypes: AminoTypes;
 } => {
-  const registry = new Registry([...defaultTypes, ...circleProtoRegistry]);
+  const registry = new Registry([
+    ...defaultTypes, 
+    ...circleProtoRegistry,
+  ]);
   const aminoTypes = new AminoTypes({
     ...circleAminoConverters
   });

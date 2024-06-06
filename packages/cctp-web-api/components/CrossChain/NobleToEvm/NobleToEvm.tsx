@@ -40,7 +40,6 @@ export default observer(function NobleToEvm({
     const buffer = Buffer.from(mintRecipient, "hex");
     const mintRecipientBytes = new Uint8Array(buffer)
 
-    
     const gasFee = bn(nobleFee).times(1e6).toFixed(0)
     const routeFee = param?.fee || Infinity
     let amount = bn(inputStore.amount).times(10**6).toFixed(0)
@@ -57,6 +56,7 @@ export default observer(function NobleToEvm({
       mintRecipient: mintRecipientBytes,
       burnToken: 'uusdc',
     })
+
     const msgFee = send({
       fromAddress: from,
       toAddress: params.minter!,
@@ -66,8 +66,8 @@ export default observer(function NobleToEvm({
     let client: SigningStargateClient
     setSending(true)
     try {
-      const signer = keplr.getOfflineSigner('noble-1') // amino not support /cosmos.bank.v1beta1.MsgSend
-      client = await getSigningCircleClient({rpcEndpoint: sourceChain?.rpc!, signer}) as unknown as SigningStargateClient // only use telescope, cctp-example is support sendToken msg
+      const signer = await keplr.getOfflineSignerAuto('noble-1')
+      client = await getSigningCircleClient({rpcEndpoint: sourceChain?.rpc!, signer}) as unknown as SigningStargateClient
     } catch(error:any) {
       setSending(false)
       modalStore.showModal({title: 'Error', body: error?.message??error.toString()})
@@ -77,13 +77,18 @@ export default observer(function NobleToEvm({
     console.log({from, msgFee, msg})
     try {
       fee = {amount: [{amount: '0', denom: 'uusdc'}], gas:((await client.simulate(from, [msgFee, msg],''))*Number(2)).toString()}
+      console.log('fee', fee)
     } catch(error:any) {
       console.error('simulate error', error)
       setSending(false)
       modalStore.showModal({title: 'Error', body: error?.message??error.toString()})
       return
     }
-    client.signAndBroadcast(from, [msgFee, msg], fee).then((res)=>{
+
+    client.signAndBroadcast(from, [
+      msgFee,
+      msg
+    ], fee).then((res)=>{
       if (res.code !==0) {
         setSending(false)
         modalStore.showModal({title: 'Error', 
