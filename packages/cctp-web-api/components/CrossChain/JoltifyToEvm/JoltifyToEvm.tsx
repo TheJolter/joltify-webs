@@ -266,7 +266,7 @@ export default observer(function JoltifyToEvm({
 <div>
   <div className="grid grid-cols-3">
     <Button color={receivedOnNoble?'default':'success'}
-      disabled={receivedOnNoble||sendingToNoble || disabled}
+      disabled={ receivedOnNoble || sendingToNoble || disabled || cosmosWalletStore.isNanoLedger}
       onClick={handleSendToNoble}
     >
       1. Send to Noble
@@ -284,7 +284,12 @@ export default observer(function JoltifyToEvm({
   <p className="text-sm text-gray-500 mt-1">
     Gas fee: less than {nobleFee} USDC; Router fee: { bigNumberCeil(bn(param?.fee||0).div(10**6), 6).toFixed() } USDC
   </p>
-  <p className=" text-orange-600 text-xl mt-5">Please stay on this page during processing</p>
+  {!cosmosWalletStore.isNanoLedger&&
+    <p className="text-orange-600 text-xl mt-5">Please stay on this page during processing</p>
+  }
+  {cosmosWalletStore.isNanoLedger&&
+    <p className="text-orange-600 text-xl mt-5">The route does not work with Ledger yet.</p>
+  }
 </div>
   )
 })

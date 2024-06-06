@@ -169,7 +169,7 @@ export default observer(function NobleToEvm({
   return (
 <div>
   <Button color="success" onClick={handleSend}
-    disabled={sending || disabled}
+    disabled={sending || disabled || cosmosWalletStore.isNanoLedger}
   >
     Send to {targetChain?.chainName}
     {sending&&<Spinner size="sm" color="default"/>}
@@ -177,7 +177,12 @@ export default observer(function NobleToEvm({
   <p className="text-sm text-gray-500 mt-1">
     Gas fee: less than {nobleFee} USDC; Router fee: { bigNumberCeil(bn(param?.fee||0).div(10**6), 6).toFixed() } USDC
   </p>
-  {sending&&<p className="mt-5">Please stay in this page while in processing</p>}
+  {sending&&
+    <p className="text-orange-600 text-xl mt-5">Please stay on this page during processing</p>
+  }
+  {cosmosWalletStore.isNanoLedger&&
+    <p className="text-orange-600 text-xl mt-5">The route does not work with Ledger yet.</p>
+  }
 </div>
   )
 })

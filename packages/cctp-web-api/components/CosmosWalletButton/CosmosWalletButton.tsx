@@ -7,18 +7,26 @@ import { observer } from 'mobx-react-lite'
 import {Dropdown, DropdownTrigger, DropdownMenu, DropdownItem} from "@nextui-org/react";
 import cosmosAddrConvertor from "@/utils/cosmosAddrConvertor";
 import { useEffect } from "react";
+import { Keplr } from "@keplr-wallet/types";
 
 export default observer(function CosmosWalletButton() {
   const cosmosWalletStore = useStore('cosmosWalletStore')
 
+  const joltifyChainID = 'joltify_1729-1'
+
   const handleConnect = async () => {
-    const keplr = (window as any).keplr
-    await keplr.enable('joltify_1729-1')
-    const offlineSigner = keplr.getOfflineSigner('joltify_1729-1')
+    const keplr: Keplr = (window as any).keplr
+    await keplr.enable(joltifyChainID)
+    const offlineSigner = keplr.getOfflineSigner(joltifyChainID)
+
+    console.log('offlineSigner', offlineSigner)
 
     const accounts = await offlineSigner.getAccounts()
+    console.log('accounts', accounts)
     const address = accounts[0].address
-    cosmosWalletStore.login(address)
+    cosmosWalletStore.login(address, {
+      isNanoLedger: (await keplr.getKey(joltifyChainID)).isNanoLedger
+    })
   }
 
   const handleLogout = () => {

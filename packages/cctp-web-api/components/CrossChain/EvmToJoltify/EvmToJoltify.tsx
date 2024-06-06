@@ -241,7 +241,7 @@ export default observer(function EvmToJolyify({
       {sendingToJoltify&&<Spinner size="sm" color="default"/>}
     </Button>
   </div>
-  <p className=" text-orange-600 text-xl">Please stay on this page during processing</p>
+  <p className="text-orange-600 text-xl mt-5">Please stay on this page during processing</p>
 </div>
   )
 })
