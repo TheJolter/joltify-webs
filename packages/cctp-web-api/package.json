@@ -3,7 +3,7 @@
 	"version": "0.0.1",
 	"private": true,
 	"scripts": {
-		"dev": "next dev -p 1323",
+		"dev": "cross-env NEXT_PUBLIC_ENV=DEV next dev -p 1323",
 		"build": "next build",
 		"start": "next start -p 1323",
 		"lint": "eslint . --ext .ts,.tsx -c .eslintrc.json --fix"
@@ -32,6 +32,7 @@
 		"autoprefixer": "10.4.19",
 		"bech32": "^2.0.0",
 		"clsx": "^2.0.0",
+		"codegen-circle": "^1.0.0",
 		"eslint": "^8.56.0",
 		"eslint-config-next": "14.2.1",
 		"eslint-config-prettier": "^8.2.0",
@@ -56,7 +57,9 @@
 		"tailwind-variants": "^0.1.20",
 		"tailwindcss": "3.4.3",
 		"typescript": "5.0.4",
-		"utils": "1.0.0",
-		"codegen-circle": "^1.0.0"
+		"utils": "1.0.0"
+	},
+	"devDependencies": {
+		"cross-env": "^7.0.3"
 	}
 }
