@@ -8,7 +8,7 @@ import { useStore } from "@/stores/hooks";
 import { CosmosChain, chains } from "@/config/chains";
 import watchCosmosUsdcChange from "@/utils/watchCosmosTokenChange";
 import { MsgTransferEncodeObject, SigningStargateClient } from "@cosmjs/stargate"
-import { Decimal } from "@cosmjs/math"
+import { Decimal } from "@cosmjs/stargate/node_modules/@cosmjs/math/build/decimal" // "@cosmjs/math"
 import { Keplr } from "@keplr-wallet/types"
 import { nobleFee } from "@/config";
 import { bn } from "utils";
