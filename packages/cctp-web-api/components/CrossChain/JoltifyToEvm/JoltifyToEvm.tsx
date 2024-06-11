@@ -234,7 +234,7 @@ export default observer(function JoltifyToEvm({
             if (res.status!==1) {
               modalStore.showModal({
                 title: res.error ?? res.message ?? res.toString(), 
-                body: `Copy and save this url: ${sourceChain?.explorer}/transactions/${res.transactionHash} and contact us for help`
+                body: `Copy and save this url: ${nobleChain?.explorer}/transactions/${res.transactionHash} and contact us for help`
               })
               return
             }
@@ -249,7 +249,7 @@ export default observer(function JoltifyToEvm({
           }).catch(error=>{
             modalStore.showModal({
               title: error?.message??error.toString(), 
-              body: `Copy and save this url: ${sourceChain?.explorer}/transactions/${res.transactionHash} and contact us for help`
+              body: `Copy and save this url: ${nobleChain?.explorer}/transactions/${res.transactionHash} and contact us for help`
             })
           }).finally(()=>{
             setSendingToEvm(false)
