@@ -136,6 +136,7 @@ export default observer(function EvmToJolyify({
     const signer = keplr.getOfflineSignerOnlyAmino(nobleChain.chainID)
     setSendingToJoltify(true);
     const sender = (await signer.getAccounts())[0].address
+    // @ts-ignore
     const client = await SigningStargateClient.connectWithSigner(nobleChain.rpc, signer, {gasPrice: {amount: Decimal.fromUserInput('4000', 0), denom: 'uusdc'}})
     const gasFee = bn(nobleFee).times(1e6).toFixed(0)
     let amount = bn(inputStore.amount).times(1e6).toFixed(0)

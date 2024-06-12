@@ -34,6 +34,7 @@ export default observer(function BetweenCosmos({
     const signer = keplr.getOfflineSignerOnlyAmino(sourceChain.chainID)
     setSending(true)
     const sender = (await signer.getAccounts())[0].address
+    // @ts-ignore
     const client = await SigningStargateClient.connectWithSigner(sourceChain.rpc, signer, {gasPrice: {amount: Decimal.fromUserInput('4000', 0), denom: sourceChain.nativeToken}})
     const gasFee = bn(nobleFee).times(1e6).toFixed(0)
     let amount = bn(inputStore.amount).times(1e6).toFixed(0)
