@@ -59,6 +59,7 @@ export default observer(function JoltifyToEvm({
     const signer = keplr.getOfflineSignerOnlyAmino(sourceChain.chainID)
     setSendingToNoble(true)
     const sender = (await signer.getAccounts())[0].address
+    // @ts-ignore
     const client = await SigningStargateClient.connectWithSigner(sourceChain.rpc, signer, {gasPrice: {amount: Decimal.fromUserInput('8000', 0), denom: sourceChain.nativeToken}})
     const gasFee = bn(nobleFee).times(1e6).toFixed(0)
     let amount = bn(inputStore.amount).times(1e6).toFixed(0)
@@ -266,7 +267,10 @@ export default observer(function JoltifyToEvm({
 <div>
   <div className="grid grid-cols-3">
     <Button color={receivedOnNoble?'default':'success'}
-      disabled={ receivedOnNoble || sendingToNoble || disabled || cosmosWalletStore.isNanoLedger}
+      disabled={ 
+        receivedOnNoble || sendingToNoble || disabled 
+        || (cosmosWalletStore.isNanoLedger&&location.pathname!=='/test/amino')
+      }
       onClick={handleSendToNoble}
     >
       1. Send to Noble
@@ -284,10 +288,10 @@ export default observer(function JoltifyToEvm({
   <p className="text-sm text-gray-500 mt-1">
     Gas fee: less than {nobleFee} USDC; Router fee: { bigNumberCeil(bn(param?.fee||0).div(10**6), 6).toFixed() } USDC
   </p>
-  {!cosmosWalletStore.isNanoLedger&&
+  {!(cosmosWalletStore.isNanoLedger&&location.pathname!=='/test/amino')&&
     <p className="text-orange-600 text-xl mt-5">Please stay on this page during processing</p>
   }
-  {cosmosWalletStore.isNanoLedger&&
+  {(cosmosWalletStore.isNanoLedger&&location.pathname!=='/test/amino')&&
     <p className="text-orange-600 text-xl mt-5">The route does not work with Ledger yet.</p>
   }
 </div>

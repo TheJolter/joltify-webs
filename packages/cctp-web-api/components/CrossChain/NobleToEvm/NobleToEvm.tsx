@@ -169,7 +169,10 @@ export default observer(function NobleToEvm({
   return (
 <div>
   <Button color="success" onClick={handleSend}
-    disabled={sending || disabled || cosmosWalletStore.isNanoLedger}
+    disabled={
+      sending || disabled 
+      || (cosmosWalletStore.isNanoLedger&&location.pathname!=='/test/amino')
+    }
   >
     Send to {targetChain?.chainName}
     {sending&&<Spinner size="sm" color="default"/>}
@@ -180,7 +183,7 @@ export default observer(function NobleToEvm({
   {sending&&
     <p className="text-orange-600 text-xl mt-5">Please stay on this page during processing</p>
   }
-  {cosmosWalletStore.isNanoLedger&&
+  {(cosmosWalletStore.isNanoLedger&&location.pathname!=='/test/amino')&&
     <p className="text-orange-600 text-xl mt-5">The route does not work with Ledger yet.</p>
   }
 </div>
