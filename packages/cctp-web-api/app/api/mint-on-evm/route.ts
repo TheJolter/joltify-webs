@@ -5,6 +5,7 @@ import { txExample } from "../test/noble-tx-analysis/tx";
 import { verifyTx } from "./verify-tx";
 import { submitEvmMint } from "@/utils/submit-evm-mint/submit-evm-mint";
 import { Attestation } from "@/types";
+import { chains, CosmosChain } from "@/config/chains";
 
 type ReqBody = {
   messages: Attestation[],
@@ -15,10 +16,11 @@ export async function POST(req:NextRequest) {
   const {messages, transactionHash} = await req.json() as ReqBody
   if (!transactionHash) return NextResponse.rewrite('transactionHash not found', { status: 403 });
 
+  let nobleLCD = (chains.find(item=>item.chainID==='noble-1') as CosmosChain).lcd
   // get target evm chain doaccording to transactionHash
   let tx: (typeof txExample)
   try {
-    tx = (await (await fetch(`https://lcd.mainnet.noble.strange.love/cosmos/tx/v1beta1/txs/${transactionHash}`)).json()) as (typeof txExample)
+    tx = (await (await fetch(`${nobleLCD}/cosmos/tx/v1beta1/txs/${transactionHash}`)).json()) as (typeof txExample)
   } catch (error) {
     return NextResponse.json({ error }, { status: 400 });
   }

@@ -8,6 +8,7 @@ import { circle, getSigningCircleClient } from 'codegen-circle'
 import { ethers } from "ethers";
 import { DirectSecp256k1Wallet } from "@cosmjs/proto-signing"
 import { DeliverTxResponse } from "@cosmjs/stargate";
+import { chains } from "@/config/chains";
 
 export async function POST(req:NextRequest) {
   const { messages } = await req.json() as AttestationType
@@ -18,7 +19,7 @@ export async function POST(req:NextRequest) {
   )
   const from = (await wallet.getAccounts())[0].address
   console.log('from', from)
-  const rpcEndpoint = 'https://rpc.noble.strange.love'
+  const rpcEndpoint = chains.find(item=>item.chainID==='noble-1')?.rpc!
   const { receiveMessage } = circle.cctp.v1.MessageComposer.withTypeUrl
   const client = await getSigningCircleClient({
     rpcEndpoint,

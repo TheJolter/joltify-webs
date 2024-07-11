@@ -78,8 +78,8 @@ export const chains:Chain[] = [
   {
     chainID: 'noble-1',
     chainName: 'Noble',
-    rpc: 'https://rpc.noble.strange.love',
-    lcd: 'https://lcd.noble.strange.love',
+    rpc: 'https://noble-rpc.polkachu.com',
+    lcd: 'https://noble-api.lavenderfive.com',
     domain: 4,
     usdcAddress: 'uusdc',
     chainType: 'cosmos',
